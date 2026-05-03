@@ -18,6 +18,15 @@ Geen tag = van toepassing op alle platformen.
 
 ## [Unreleased]
 ### Toegevoegd
+### Gewijzigd
+### Opgelost
+### Verwijderd
+
+---
+
+## [0.2.0] - 2026-05-03
+
+### Toegevoegd
 - Volledige update-module met in-app UI (changelog tonen, voortgangsbalk, installeerknop)
   - **Windows:** automatisch downloaden via electron-updater, changelog tonen, "Nu installeren & herstarten"
   - **Linux (AppImage):** automatisch downloaden via electron-updater
@@ -26,47 +35,30 @@ Geen tag = van toepassing op alle platformen.
   - Changelog opgehaald van GitHub Releases API, gebundelde CHANGELOG.md als fallback
   - Updatecheck bij opstarten + elke 6 uur op de achtergrond
   - Update-banner is wegklikbaar, toegankelijk met `role="alert"` en `aria-live`
-- Visuele tijdlijn met verbindingslijn: verticale lijn verbindt alle momenten, afgeronde momenten tonen grijze lijn, actief moment heeft gekleurde ring om dot
-- Kleurcodering: water = blauw, eten = oranje — consequent doorgevoerd in kaart, countdown en tijdlijn
-  - Volgende-melding kaart: gekleurde linker accentrand per type
-  - Countdown tekst: type-kleur (blauw/oranje), oranje bij urgentie ongeacht type
-  - Timeline items: subtiele gekleurde achtergrondcirkel per emoji
-- Countdown op de volgende melding: toont "over 23 min" / "over 1u 15min" / "Nu!" in plaats van alleen het tijdstip
-- Countdown kleurt oranje als de melding binnen 5 minuten is
-- Tijdstip staat klein onder de countdown als referentie
-- Schermlezer leest de countdown in volledige tekst ("over 23 minuten")
-- Volledige toegankelijkheid voor JAWS, NVDA, TalkBack en VoiceOver
-  - `lang="nl"` op `<html>` voor correcte uitspraak door schermlezer
-  - Skip-link "Ga naar schema" voor toetsenbordgebruikers
-  - `<label>` gekoppeld aan tijdveld via `for`/`id`
-  - `role="tablist"` + `role="tab"` + `aria-selected` op dagtabs, pijltoetsen voor navigatie
-  - Unieke `aria-label` per "Bevestig"-knop met naam en tijdstip
-  - `aria-live="polite"` regio kondigt schema-updates aan voor schermlezer
-  - `momentAriaLabel()` beschrijft elk moment volledig (type, naam, tijd, status)
+- Visuele tijdlijn met verbindingslijn: verticale lijn verbindt alle momenten, afgeronde momenten grijze lijn, actief moment gekleurde ring om dot
+- Kleurcodering: water = blauw, eten = oranje — doorgevoerd in kaartrand, countdown en tijdlijn
+- Live countdown op de volgende melding: "over 23 min" / "over 1u 15min" / "Nu!" — oranje bij ≤ 5 minuten
+- Volledige toegankelijkheid (WCAG 2.1 AA) voor JAWS, NVDA, TalkBack en VoiceOver
+  - `lang="nl"` voor correcte uitspraak, skip-link, `<label>` op tijdveld
+  - `role="tablist"` + `aria-selected` + pijltoetsnavigatie op dagtabs
+  - Unieke `aria-label` per "Bevestig"-knop, `aria-live` voor schema-updates
   - Focus verplaatst automatisch naar tijdveld bij bewerken begintijd
-  - `aria-hidden="true"` op decoratieve emoji's en herhaalbare labels
-  - Statusaankondigingen na bevestiging ("bevestigd, volgende melding is...")
+- **macOS:** Applicatiemenu met Cmd+Q, Verberg, Over; native traffic-light knoppen
+- **macOS:** Electron dmg-build voor Intel (x64) en Apple Silicon (arm64) via GitHub Actions
+- **Linux:** AppImage, .deb en .rpm builds via GitHub Actions
+- **iOS:** Capacitor iOS-ondersteuning (`@capacitor/ios`), unsigned IPA via GitHub Actions
+- GitHub Actions release-workflow voor macOS, Linux en iOS
 
 ### Opgelost
-- `focus:outline-none` verwijderde focusindicator — vervangen door `focus-visible:ring`
-- `text-gray-500` op donkere achtergrond haalde contrast AA niet — verhoogd naar `text-gray-400`/`text-gray-300`
-- `showTomorrow` ref niet gedeclareerd in script — dode knop verwijderd
+- Focusindicator ontbrak (`focus:outline-none`) — vervangen door `focus-visible:ring`
+- Contrast te laag voor `text-gray-500` op donkere achtergrond — verhoogd naar `text-gray-400`
+- Dode `showTomorrow`-knop verwijderd (ref niet gedeclareerd)
 - Dag-tabknoppen waren niet met pijltoetsen te bedienen
+- Bevestigen van morgen-momenten gebruikte altijd vandaag's datum
 
 ### Gewijzigd
-- **macOS:** Venstergedrag aangepast aan macOS-conventies: app blijft actief in dock bij sluiten venster, Cmd+Q sluit correct af
-- **macOS:** Native traffic-light knoppen (hiddenInset titelbalk)
-- **Linux:** System tray werkt nu zonder crash op desktops zonder tray-ondersteuning (bijv. GNOME)
-
-### Toegevoegd
-- **macOS:** Electron dmg-build voor Intel (x64) en Apple Silicon (arm64) via GitHub Actions
-- **macOS:** Applicatiemenu met Cmd+Q, Verberg, Over
-- **Linux:** AppImage, .deb en .rpm builds via GitHub Actions
-- **iOS:** Capacitor iOS-ondersteuning toegevoegd (`@capacitor/ios`)
-- **iOS:** Unsigned IPA-build via GitHub Actions (Xcode op macOS runner)
-- GitHub Actions release-workflow voor macOS, Linux en iOS (triggert op git tag)
-
-### Verwijderd
+- **macOS:** Venstergedrag: app blijft actief in dock bij sluiten, Cmd+Q sluit correct af
+- **Linux:** System tray werkt zonder crash op desktops zonder tray-ondersteuning (GNOME)
 
 ---
 
