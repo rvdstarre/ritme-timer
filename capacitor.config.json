@@ -1,0 +1,11 @@
+{
+  "appId": "nl.starrevisie.ritmetimer",
+  "appName": "Ritme Timer",
+  "webDir": "dist-web",
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon_config_sample",
+      "iconColor": "#4F8EF7"
+    }
+  }
+}
