@@ -73,11 +73,20 @@
       <section
         v-if="nextPending"
         aria-label="Volgende melding"
-        class="bg-gray-900 rounded-2xl p-4"
+        :class="[
+          'bg-gray-900 rounded-2xl p-4 border-l-4',
+          nextPending.type === 'water' ? 'border-water' : 'border-food'
+        ]"
       >
         <p class="text-xs text-gray-400 mb-2" aria-hidden="true">Volgende melding</p>
         <div class="flex items-center gap-3">
-          <span aria-hidden="true" class="text-2xl shrink-0">
+          <span
+            aria-hidden="true"
+            :class="[
+              'text-xl w-10 h-10 flex items-center justify-center rounded-full shrink-0',
+              nextPending.type === 'water' ? 'bg-water/20' : 'bg-food/20'
+            ]"
+          >
             {{ nextPending.type === 'water' ? '💧' : '🍽️' }}
           </span>
           <div class="flex-1 min-w-0">
@@ -86,7 +95,9 @@
             <p
               :class="[
                 'text-xl font-mono font-bold tabular-nums',
-                countdown?.urgent ? 'text-orange-400' : 'text-white'
+                countdown?.urgent
+                  ? 'text-orange-400'
+                  : nextPending.type === 'water' ? 'text-water' : 'text-food'
               ]"
               :aria-label="countdown?.ariaText"
             >
@@ -128,7 +139,13 @@
             ]"
             :aria-label="momentAriaLabel(moment)"
           >
-            <span aria-hidden="true" class="text-lg w-6 text-center shrink-0">
+            <span
+              aria-hidden="true"
+              :class="[
+                'text-base w-8 h-8 flex items-center justify-center rounded-full shrink-0',
+                moment.type === 'water' ? 'bg-water/15' : 'bg-food/15'
+              ]"
+            >
               {{ moment.type === 'water' ? '💧' : '🍽️' }}
             </span>
             <div class="flex-1 min-w-0">

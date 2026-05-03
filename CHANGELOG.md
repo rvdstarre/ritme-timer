@@ -18,6 +18,10 @@ Geen tag = van toepassing op alle platformen.
 
 ## [Unreleased]
 ### Toegevoegd
+- Kleurcodering: water = blauw, eten = oranje — consequent doorgevoerd in kaart, countdown en tijdlijn
+  - Volgende-melding kaart: gekleurde linker accentrand per type
+  - Countdown tekst: type-kleur (blauw/oranje), oranje bij urgentie ongeacht type
+  - Timeline items: subtiele gekleurde achtergrondcirkel per emoji
 - Countdown op de volgende melding: toont "over 23 min" / "over 1u 15min" / "Nu!" in plaats van alleen het tijdstip
 - Countdown kleurt oranje als de melding binnen 5 minuten is
 - Tijdstip staat klein onder de countdown als referentie
