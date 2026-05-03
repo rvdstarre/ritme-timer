@@ -39,7 +39,8 @@ function createWindow() {
 }
 
 function createTray() {
-  const icon = nativeImage.createEmpty()
+  const iconPath = join(__dirname, '../../build/icon.ico')
+  const icon = nativeImage.createFromPath(iconPath)
   tray = new Tray(icon)
   tray.setToolTip('Ritme Timer')
   tray.setContextMenu(Menu.buildFromTemplate([
@@ -61,7 +62,8 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-  // Niet afsluiten — tray blijft actief voor notificaties
+  // Bewust leeg: tray blijft actief zodat notificaties doorlopen
+  // Afsluiten gaat via het tray-contextmenu ("Afsluiten")
 })
 
 app.on('activate', () => {

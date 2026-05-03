@@ -2,13 +2,14 @@
   "name": "ritme-timer",
   "version": "0.1.0",
   "description": "Voedings- en drinkritme herinneringsapp",
-  "main": "dist-electron/main/index.js",
+  "main": "out/main/index.js",
+  "type": "module",
   "author": "Robbert van der Starre",
   "license": "MIT",
   "scripts": {
     "dev": "electron-vite dev",
     "build": "electron-vite build",
-    "build:web": "vite build --outDir dist-web",
+    "build:web": "electron-vite build && node scripts/copy-web.js",
     "preview": "electron-vite preview",
     "package": "electron-vite build && electron-builder"
   },
@@ -37,11 +38,16 @@
     "appId": "nl.starrevisie.ritme-timer",
     "productName": "Ritme Timer",
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "build/icon.ico",
+      "certificateFile": "build/codesign.pfx",
+      "certificatePassword": ""
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
     },
     "publish": {
       "provider": "github",

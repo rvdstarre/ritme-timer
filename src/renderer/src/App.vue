@@ -152,8 +152,11 @@ async function applyStartTime() {
 }
 
 async function confirm(moment) {
-  const data = await confirmMoment(dateKeys.value.today, moment.id)
-  if (data) todayData.value = data
+  const data = await confirmMoment(currentKey.value, moment.id)
+  if (data) {
+    if (activeTab.value === 'today') todayData.value = data
+    else tomorrowData.value = data
+  }
 }
 
 onMounted(async () => {
