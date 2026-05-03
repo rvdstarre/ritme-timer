@@ -3,6 +3,14 @@
 Alle wijzigingen per versie worden hier bijgehouden.
 Formaat gebaseerd op [Keep a Changelog](https://keepachangelog.com/nl/1.0.0/).
 
+Platformtags worden alleen vermeld als een wijziging platform-specifiek is.
+Geen tag = van toepassing op alle platformen.
+
+| Tag | Platform |
+|-----|----------|
+| **Windows:** | Electron desktop (Windows) |
+| **Android:** | Capacitor Android app |
+
 ---
 
 ## [Unreleased]
@@ -42,10 +50,10 @@ Formaat gebaseerd op [Keep a Changelog](https://keepachangelog.com/nl/1.0.0/).
 - Dagweergave met status per moment (pending / done / missed)
 - Begintijd instellen voor vandaag en morgen
 - Bevestiging per moment via UI
-- Push-notificaties op Windows (Electron Notification API)
-- Push-notificaties op Android (Capacitor LocalNotifications)
-- System tray — app blijft actief op de achtergrond voor notificaties
 - Abstractielaag `services/api.js` voor Electron én Capacitor
-- Windows NSIS installer via electron-builder
-- Zelf-ondertekend code signing certificaat
-- Auto-update via electron-updater (Windows)
+- **Windows:** Push-notificaties via Electron Notification API
+- **Windows:** System tray — app blijft actief op de achtergrond voor notificaties
+- **Windows:** NSIS installer via electron-builder
+- **Windows:** Zelf-ondertekend code signing certificaat
+- **Windows:** Auto-update via electron-updater
+- **Android:** Push-notificaties via Capacitor LocalNotifications
