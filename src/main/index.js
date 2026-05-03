@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron'
 import { join } from 'path'
-import { autoUpdater } from 'electron-updater'
 import { registerHandlers } from './ipc-handlers.js'
+import { setupUpdater } from './update-manager.js'
 
 const isMac     = process.platform === 'darwin'
 const isWindows = process.platform === 'win32'
@@ -95,7 +95,7 @@ app.whenReady().then(() => {
   if (isMac) setupMacMenu()
 
   if (process.env.NODE_ENV !== 'development') {
-    autoUpdater.checkForUpdatesAndNotify()
+    setupUpdater()
   }
 })
 

@@ -11,6 +11,9 @@
       <h1 class="text-xl font-bold tracking-tight">Ritme Timer</h1>
     </header>
 
+    <!-- Update beschikbaar -->
+    <UpdateBanner />
+
     <!-- Dag selector tabs -->
     <div role="tablist" aria-label="Dag selecteren" class="flex gap-2 text-sm">
       <button
@@ -209,6 +212,7 @@
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { getDateKeys, setStartTime, confirmMoment, syncDay, onNotificationClicked } from './services/api.js'
 import { getNextPending } from './utils/schema-engine-web.js'
+import UpdateBanner from './components/UpdateBanner.vue'
 
 const dateKeys     = ref({ today: '', tomorrow: '' })
 const activeTab    = ref('today')

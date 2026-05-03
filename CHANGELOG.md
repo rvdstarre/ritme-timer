@@ -18,6 +18,14 @@ Geen tag = van toepassing op alle platformen.
 
 ## [Unreleased]
 ### Toegevoegd
+- Volledige update-module met in-app UI (changelog tonen, voortgangsbalk, installeerknop)
+  - **Windows:** automatisch downloaden via electron-updater, changelog tonen, "Nu installeren & herstarten"
+  - **Linux (AppImage):** automatisch downloaden via electron-updater
+  - **Linux (.deb/.rpm):** GitHub API check, melding met directe downloadlink naar GitHub releases
+  - **macOS:** automatisch downloaden via electron-updater (vereist signing voor productie)
+  - Changelog opgehaald van GitHub Releases API, gebundelde CHANGELOG.md als fallback
+  - Updatecheck bij opstarten + elke 6 uur op de achtergrond
+  - Update-banner is wegklikbaar, toegankelijk met `role="alert"` en `aria-live`
 - Visuele tijdlijn met verbindingslijn: verticale lijn verbindt alle momenten, afgeronde momenten tonen grijze lijn, actief moment heeft gekleurde ring om dot
 - Kleurcodering: water = blauw, eten = oranje — consequent doorgevoerd in kaart, countdown en tijdlijn
   - Volgende-melding kaart: gekleurde linker accentrand per type
