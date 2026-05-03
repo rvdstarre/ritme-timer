@@ -18,6 +18,7 @@ Geen tag = van toepassing op alle platformen.
 
 ## [Unreleased]
 ### Toegevoegd
+- Visuele tijdlijn met verbindingslijn: verticale lijn verbindt alle momenten, afgeronde momenten tonen grijze lijn, actief moment heeft gekleurde ring om dot
 - Kleurcodering: water = blauw, eten = oranje — consequent doorgevoerd in kaart, countdown en tijdlijn
   - Volgende-melding kaart: gekleurde linker accentrand per type
   - Countdown tekst: type-kleur (blauw/oranje), oranje bij urgentie ongeacht type

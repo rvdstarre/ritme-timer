@@ -116,8 +116,8 @@
       </section>
 
       <!-- Volledige tijdlijn -->
-      <section aria-label="Dagschema" class="bg-gray-900 rounded-2xl p-4 flex flex-col gap-2">
-        <div class="flex items-center justify-between mb-1">
+      <section aria-label="Dagschema" class="bg-gray-900 rounded-2xl p-4">
+        <div class="flex items-center justify-between mb-3">
           <p class="text-xs text-gray-400" aria-hidden="true">Schema</p>
           <button
             @click="editingStart = true"
@@ -127,49 +127,76 @@
           </button>
         </div>
 
-        <ul class="flex flex-col gap-1" aria-label="Momenten">
+        <ul class="flex flex-col" aria-label="Momenten">
           <li
-            v-for="moment in currentDay.schedule"
+            v-for="(moment, index) in currentDay.schedule"
             :key="moment.id"
-            :class="[
-              'flex items-center gap-3 py-2 px-3 rounded-xl transition',
-              moment.status === 'done'   ? 'opacity-50' : '',
-              moment.status === 'missed' ? 'opacity-40' : '',
-              moment.id === nextPending?.id ? 'bg-gray-800' : ''
-            ]"
+            class="flex gap-3"
             :aria-label="momentAriaLabel(moment)"
           >
-            <span
-              aria-hidden="true"
+            <!-- Links: dot + verbindingslijn -->
+            <div class="flex flex-col items-center w-8 shrink-0">
+              <span
+                aria-hidden="true"
+                :class="[
+                  'text-sm w-8 h-8 flex items-center justify-center rounded-full shrink-0 transition',
+                  moment.type === 'water' ? 'bg-water/15' : 'bg-food/15',
+                  moment.status === 'done' || moment.status === 'missed' ? 'opacity-30' : '',
+                  moment.id === nextPending?.id
+                    ? (moment.type === 'water'
+                        ? 'ring-2 ring-water ring-offset-2 ring-offset-gray-900'
+                        : 'ring-2 ring-food ring-offset-2 ring-offset-gray-900')
+                    : ''
+                ]"
+              >
+                {{ moment.type === 'water' ? '💧' : '🍽️' }}
+              </span>
+              <!-- Verbindingslijn — niet bij het laatste item -->
+              <div
+                v-if="index < currentDay.schedule.length - 1"
+                :class="[
+                  'w-0.5 flex-1 mt-1 min-h-4 rounded-full',
+                  moment.status === 'done' ? 'bg-gray-600' : 'bg-gray-700'
+                ]"
+              ></div>
+            </div>
+
+            <!-- Rechts: content -->
+            <div
               :class="[
-                'text-base w-8 h-8 flex items-center justify-center rounded-full shrink-0',
-                moment.type === 'water' ? 'bg-water/15' : 'bg-food/15'
+                'flex-1 flex items-center gap-2 min-w-0 transition',
+                index < currentDay.schedule.length - 1 ? 'pb-4' : 'pb-0',
+                moment.status === 'done' || moment.status === 'missed' ? 'opacity-40' : ''
               ]"
             >
-              {{ moment.type === 'water' ? '💧' : '🍽️' }}
-            </span>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium truncate">{{ moment.label }}</p>
-              <p class="text-xs text-gray-400">{{ formatTime(moment.scheduledAt) }}</p>
+              <div class="flex-1 min-w-0">
+                <p
+                  :class="[
+                    'text-sm font-medium truncate',
+                    moment.status === 'missed' ? 'line-through' : ''
+                  ]"
+                >{{ moment.label }}</p>
+                <p class="text-xs text-gray-400">{{ formatTime(moment.scheduledAt) }}</p>
+              </div>
+              <span
+                v-if="moment.status === 'done'"
+                aria-label="Bevestigd"
+                aria-hidden="true"
+                class="text-green-500 text-xs shrink-0"
+              >✓</span>
+              <span
+                v-if="moment.status === 'missed'"
+                class="text-red-400 text-xs shrink-0"
+              >Gemist</span>
+              <button
+                v-if="moment.status === 'pending' && moment.id !== nextPending?.id"
+                @click="confirm(moment)"
+                :aria-label="`Bevestig: ${moment.label} om ${formatTime(moment.scheduledAt)}`"
+                class="text-xs text-gray-400 hover:text-green-400 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded px-1 shrink-0"
+              >
+                Bevestig
+              </button>
             </div>
-            <span
-              v-if="moment.status === 'done'"
-              aria-label="Bevestigd"
-              class="text-green-500 text-xs"
-              aria-hidden="true"
-            >✓</span>
-            <span
-              v-if="moment.status === 'missed'"
-              class="text-red-400 text-xs"
-            >Gemist</span>
-            <button
-              v-if="moment.status === 'pending' && moment.id !== nextPending?.id"
-              @click="confirm(moment)"
-              :aria-label="`Bevestig: ${moment.label} om ${formatTime(moment.scheduledAt)}`"
-              class="text-xs text-gray-400 hover:text-green-400 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded px-1"
-            >
-              Bevestig
-            </button>
           </li>
         </ul>
       </section>
