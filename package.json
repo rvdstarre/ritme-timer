@@ -4,7 +4,10 @@
   "description": "Voedings- en drinkritme herinneringsapp",
   "main": "out/main/index.js",
   "type": "module",
-  "author": "Robbert van der Starre",
+  "author": {
+    "name": "Robbert van der Starre",
+    "email": "info@starrevisie.nl"
+  },
   "license": "MIT",
   "scripts": {
     "dev": "electron-vite dev",
