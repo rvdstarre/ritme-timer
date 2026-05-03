@@ -18,6 +18,10 @@ Geen tag = van toepassing op alle platformen.
 
 ## [Unreleased]
 ### Toegevoegd
+- Countdown op de volgende melding: toont "over 23 min" / "over 1u 15min" / "Nu!" in plaats van alleen het tijdstip
+- Countdown kleurt oranje als de melding binnen 5 minuten is
+- Tijdstip staat klein onder de countdown als referentie
+- Schermlezer leest de countdown in volledige tekst ("over 23 minuten")
 - Volledige toegankelijkheid voor JAWS, NVDA, TalkBack en VoiceOver
   - `lang="nl"` op `<html>` voor correcte uitspraak door schermlezer
   - Skip-link "Ga naar schema" voor toetsenbordgebruikers

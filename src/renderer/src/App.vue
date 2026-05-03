@@ -75,19 +75,29 @@
         aria-label="Volgende melding"
         class="bg-gray-900 rounded-2xl p-4"
       >
-        <p class="text-xs text-gray-400 mb-1" aria-hidden="true">Volgende melding</p>
+        <p class="text-xs text-gray-400 mb-2" aria-hidden="true">Volgende melding</p>
         <div class="flex items-center gap-3">
-          <span aria-hidden="true" class="text-2xl">
+          <span aria-hidden="true" class="text-2xl shrink-0">
             {{ nextPending.type === 'water' ? '💧' : '🍽️' }}
           </span>
-          <div>
-            <p class="font-semibold">{{ nextPending.label }}</p>
-            <p class="text-sm text-gray-300">{{ formatTime(nextPending.scheduledAt) }}</p>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold truncate">{{ nextPending.label }}</p>
+            <!-- Countdown groot, tijdstip klein eronder -->
+            <p
+              :class="[
+                'text-xl font-mono font-bold tabular-nums',
+                countdown?.urgent ? 'text-orange-400' : 'text-white'
+              ]"
+              :aria-label="countdown?.ariaText"
+            >
+              {{ countdown?.text }}
+            </p>
+            <p class="text-xs text-gray-500" aria-hidden="true">{{ formatTime(nextPending.scheduledAt) }}</p>
           </div>
           <button
             @click="confirm(nextPending)"
-            :aria-label="`Bevestig: ${nextPending.label} om ${formatTime(nextPending.scheduledAt)}`"
-            class="ml-auto bg-green-600 hover:bg-green-500 text-white text-sm font-semibold px-4 py-2 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
+            :aria-label="`Bevestig: ${nextPending.label}, ${countdown?.ariaText}`"
+            class="ml-auto shrink-0 bg-green-600 hover:bg-green-500 text-white text-sm font-semibold px-4 py-2 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
           >
             Bevestig
           </button>
@@ -152,7 +162,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { getDateKeys, setStartTime, confirmMoment, syncDay, onNotificationClicked } from './services/api.js'
 import { getNextPending } from './utils/schema-engine-web.js'
 
@@ -164,6 +174,9 @@ const editingStart = ref(false)
 const startTimeInput = ref('')
 const timeInputRef = ref(null)
 const liveRegion   = ref(null)
+const now          = ref(Date.now())
+
+let clockTimer = null
 
 const currentDay = computed(() => activeTab.value === 'today' ? todayData.value : tomorrowData.value)
 const currentKey = computed(() => activeTab.value === 'today' ? dateKeys.value.today : dateKeys.value.tomorrow)
@@ -176,6 +189,25 @@ const nextPending = computed(() => {
 function formatTime(timestamp) {
   return new Date(timestamp).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })
 }
+
+const countdown = computed(() => {
+  if (!nextPending.value) return null
+  const diff = nextPending.value.scheduledAt - now.value
+
+  if (diff <= 0) return { text: 'Nu!', urgent: true, ariaText: 'Nu' }
+
+  const totalMinutes = Math.ceil(diff / 60000)
+  const hours   = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
+
+  if (hours === 0) {
+    return { text: `over ${minutes} min`, urgent: totalMinutes <= 5, ariaText: `over ${minutes} minuten` }
+  }
+  if (minutes === 0) {
+    return { text: `over ${hours}u`, urgent: false, ariaText: `over ${hours} uur` }
+  }
+  return { text: `over ${hours}u ${minutes}min`, urgent: false, ariaText: `over ${hours} uur en ${minutes} minuten` }
+})
 
 function momentAriaLabel(moment) {
   const type  = moment.type === 'water' ? 'Water drinken' : 'Eten'
@@ -234,6 +266,8 @@ watch(editingStart, async (val) => {
 })
 
 onMounted(async () => {
+  clockTimer = setInterval(() => { now.value = Date.now() }, 1000)
+
   dateKeys.value     = await getDateKeys()
   todayData.value    = await syncDay(dateKeys.value.today)
   tomorrowData.value = await syncDay(dateKeys.value.tomorrow)
@@ -243,6 +277,8 @@ onMounted(async () => {
     if (data) todayData.value = data
   })
 })
+
+onUnmounted(() => { clearInterval(clockTimer) })
 
 watch(activeTab, () => { editingStart.value = false })
 </script>
