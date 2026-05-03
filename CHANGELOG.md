@@ -9,7 +9,10 @@ Geen tag = van toepassing op alle platformen.
 | Tag | Platform |
 |-----|----------|
 | **Windows:** | Electron desktop (Windows) |
+| **macOS:** | Electron desktop (macOS) |
+| **Linux:** | Electron desktop (Linux) |
 | **Android:** | Capacitor Android app |
+| **iOS:** | Capacitor iOS app |
 
 ---
 
@@ -34,6 +37,18 @@ Geen tag = van toepassing op alle platformen.
 - Dag-tabknoppen waren niet met pijltoetsen te bedienen
 
 ### Gewijzigd
+- **macOS:** Venstergedrag aangepast aan macOS-conventies: app blijft actief in dock bij sluiten venster, Cmd+Q sluit correct af
+- **macOS:** Native traffic-light knoppen (hiddenInset titelbalk)
+- **Linux:** System tray werkt nu zonder crash op desktops zonder tray-ondersteuning (bijv. GNOME)
+
+### Toegevoegd
+- **macOS:** Electron dmg-build voor Intel (x64) en Apple Silicon (arm64) via GitHub Actions
+- **macOS:** Applicatiemenu met Cmd+Q, Verberg, Over
+- **Linux:** AppImage, .deb en .rpm builds via GitHub Actions
+- **iOS:** Capacitor iOS-ondersteuning toegevoegd (`@capacitor/ios`)
+- **iOS:** Unsigned IPA-build via GitHub Actions (Xcode op macOS runner)
+- GitHub Actions release-workflow voor macOS, Linux en iOS (triggert op git tag)
+
 ### Verwijderd
 
 ---

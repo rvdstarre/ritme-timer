@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  # ── Linux builds (AppImage, deb, rpm) ────────────────────────────
+  build-linux:
+    name: Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Build + package
+        run: npm run package -- --linux
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+
+  # ── macOS builds (dmg — Intel + Apple Silicon) ───────────────────
+  build-macos:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Build + package
+        run: npm run package -- --mac
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          # Signing: stel in als je een Apple Developer account hebt
+          # CSC_LINK: ${{ secrets.APPLE_CERT_P12_BASE64 }}
+          # CSC_KEY_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+          # APPLE_ID: ${{ secrets.APPLE_ID }}
+          # APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+
+  # ── iOS build (IPA via Xcode) ─────────────────────────────────────
+  build-ios:
+    name: iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Web build voor Capacitor
+        run: npm run build:web
+
+      - name: Capacitor sync iOS
+        run: npx cap sync ios
+
+      - name: Xcode build (unsigned IPA)
+        run: |
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath build/App.xcarchive \
+            archive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/App.xcarchive \
+            -exportOptionsPlist ios/ExportOptions.plist \
+            -exportPath build/ios-output
+
+      - name: Upload IPA naar GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/ios-output/*.ipa
+          token: ${{ secrets.RELEASES_TOKEN }}
+          repository: rvdstarre/ritme-timer-releases

@@ -4,7 +4,10 @@ dist-electron/
 dist-web/
 out/
 android/
-ios/
+# ios/ wordt bewust niet uitgesloten — Capacitor-projectstructuur zit in git
+ios/App/Pods/
+ios/App/App.xcworkspace/xcuserdata/
+ios/App/DerivedData/
 *.local
 .env
 build/codesign.pfx
