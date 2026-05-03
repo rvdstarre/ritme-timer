@@ -7,8 +7,25 @@ Formaat gebaseerd op [Keep a Changelog](https://keepachangelog.com/nl/1.0.0/).
 
 ## [Unreleased]
 ### Toegevoegd
-### Gewijzigd
+- Volledige toegankelijkheid voor JAWS, NVDA, TalkBack en VoiceOver
+  - `lang="nl"` op `<html>` voor correcte uitspraak door schermlezer
+  - Skip-link "Ga naar schema" voor toetsenbordgebruikers
+  - `<label>` gekoppeld aan tijdveld via `for`/`id`
+  - `role="tablist"` + `role="tab"` + `aria-selected` op dagtabs, pijltoetsen voor navigatie
+  - Unieke `aria-label` per "Bevestig"-knop met naam en tijdstip
+  - `aria-live="polite"` regio kondigt schema-updates aan voor schermlezer
+  - `momentAriaLabel()` beschrijft elk moment volledig (type, naam, tijd, status)
+  - Focus verplaatst automatisch naar tijdveld bij bewerken begintijd
+  - `aria-hidden="true"` op decoratieve emoji's en herhaalbare labels
+  - Statusaankondigingen na bevestiging ("bevestigd, volgende melding is...")
+
 ### Opgelost
+- `focus:outline-none` verwijderde focusindicator — vervangen door `focus-visible:ring`
+- `text-gray-500` op donkere achtergrond haalde contrast AA niet — verhoogd naar `text-gray-400`/`text-gray-300`
+- `showTomorrow` ref niet gedeclareerd in script — dode knop verwijderd
+- Dag-tabknoppen waren niet met pijltoetsen te bedienen
+
+### Gewijzigd
 ### Verwijderd
 
 ---
