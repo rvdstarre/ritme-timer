@@ -1,4 +1,5 @@
-import { autoUpdater } from 'electron-updater'
+import pkg from 'electron-updater'
+const { autoUpdater } = pkg
 import { ipcMain, shell } from 'electron'
 import { readFileSync } from 'fs'
 import { join } from 'path'

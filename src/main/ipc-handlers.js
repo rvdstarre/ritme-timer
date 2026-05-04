@@ -53,6 +53,14 @@ export function registerHandlers() {
     const updatedSchedule = markMissed(day.schedule)
     const data = { ...day, schedule: updatedSchedule }
     saveDay(dateKey, data)
+
+    // Herplan notificaties bij app-start zodat timers na herstart hersteld worden
+    if (dateKey === todayKey()) {
+      scheduleAll(updatedSchedule, (id) => {
+        global.mainWindow?.webContents.send('notification-clicked', id)
+      })
+    }
+
     return data
   })
 

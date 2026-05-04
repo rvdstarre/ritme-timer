@@ -73,20 +73,39 @@ export async function initNotifications() {
   const { display } = await LocalNotifications.requestPermissions()
   if (display !== 'granted') return
 
-  // Android 8+: channel aanmaken (idempotent)
+  // Android 8+: standaard channel aanmaken (idempotent)
+  // Kanaal-ID bevat versie zodat Android een nieuw kanaal aanmaakt bij updates
   await LocalNotifications.createChannel({
-    id: 'ritme',
+    id: 'ritme-v2',
     name: 'Ritme meldingen',
     description: 'Herinneringen voor eten en drinken',
-    importance: 4,   // HIGH
-    vibration: true,
-    sound: 'default'
+    importance: 4,   // HIGH — Android gebruikt automatisch standaard meldingsgeluid
+    vibration: true
   })
+
+  // Kritiek channel aanmaken als gebruiker dit heeft gekozen
+  const { value } = await Preferences.get({ key: 'criticalAlertsEnabled' })
+  if (value === 'true') {
+    await LocalNotifications.createChannel({
+      id: 'ritme-kritiek-v2',
+      name: 'Ritme meldingen (kritiek)',
+      description: 'Herinneringen die ook bij Niet storen doorkomen',
+      importance: 5,   // URGENT
+      vibration: true,
+      bypassDnd: true
+    })
+  }
+}
+
+async function getActiveChannelId() {
+  const { value } = await Preferences.get({ key: 'criticalAlertsEnabled' })
+  return value === 'true' ? 'ritme-kritiek-v2' : 'ritme-v2'
 }
 
 async function scheduleCapacitorNotifications(schedule) {
   await LocalNotifications.cancel({ notifications: schedule.map(m => ({ id: m.id })) })
 
+  const channelId = await getActiveChannelId()
   const now = Date.now()
   const pending = schedule
     .filter(m => m.status === 'pending' && m.scheduledAt > now)
@@ -95,7 +114,7 @@ async function scheduleCapacitorNotifications(schedule) {
       title: `Ritme Timer — ${m.type === 'water' ? 'Water' : 'Eten'}`,
       body: m.type === 'water' ? 'Tijd om wat te drinken!' : 'Tijd om te eten!',
       schedule: { at: new Date(m.scheduledAt) },
-      channelId: 'ritme'
+      channelId
     }))
 
   if (pending.length > 0) {
