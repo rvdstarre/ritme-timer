@@ -22,6 +22,10 @@ Geen tag = van toepassing op alle platformen.
 
 ### Gewijzigd
 ### Opgelost
+- **Android:** Notificaties werkten niet op Android 13+ (Pixel 9) — app vraagt nu correct toestemming via `requestPermissions()`
+- **Android:** Notificaties werkten niet op Android 8+ — notificatiekanaal `ritme` wordt nu aangemaakt bij opstarten
+- **Android:** Notificatie-icoon (`ic_stat_icon_config_sample`) bestond niet — vervangen door `ic_launcher_foreground`
+
 ### Verwijderd
 
 ---
