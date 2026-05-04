@@ -18,6 +18,8 @@ Geen tag = van toepassing op alle platformen.
 
 ## [Unreleased]
 ### Toegevoegd
+- Voortgangsbalk voor eten en water: toont hoeveel maaltijden/watermomenten al zijn bevestigd (X/Y + gekleurde balk), met `role="progressbar"` en `aria-label` voor schermlezers
+
 ### Gewijzigd
 ### Opgelost
 ### Verwijderd

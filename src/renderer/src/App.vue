@@ -72,6 +72,65 @@
       <!-- Aria-live regio voor schema-updates -->
       <div aria-live="polite" aria-atomic="false" class="sr-only" ref="liveRegion"></div>
 
+      <!-- Voortgang vandaag -->
+      <section
+        v-if="todayData"
+        aria-label="Voortgang vandaag"
+        class="bg-gray-900 rounded-2xl px-4 py-3 flex flex-col gap-2.5"
+      >
+        <!-- Eten -->
+        <div class="flex items-center gap-3">
+          <span aria-hidden="true" class="text-base w-5 text-center shrink-0">🍽️</span>
+          <div class="flex-1">
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+              <span>Gegeten</span>
+              <span :aria-label="`${foodDone} van ${foodTotal} maaltijden`">
+                {{ foodDone }}/{{ foodTotal }}
+              </span>
+            </div>
+            <div
+              class="h-1.5 bg-gray-700 rounded-full overflow-hidden"
+              role="progressbar"
+              :aria-valuenow="foodDone"
+              :aria-valuemin="0"
+              :aria-valuemax="foodTotal"
+              :aria-label="`Eten: ${foodDone} van ${foodTotal} gedaan`"
+            >
+              <div
+                class="h-full bg-food rounded-full transition-all duration-500"
+                :style="{ width: foodPercent + '%' }"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Water -->
+        <div class="flex items-center gap-3">
+          <span aria-hidden="true" class="text-base w-5 text-center shrink-0">💧</span>
+          <div class="flex-1">
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+              <span>Gedronken</span>
+              <span :aria-label="`${waterDone} van ${waterTotal} watermomenten`">
+                {{ waterDone }}/{{ waterTotal }}
+              </span>
+            </div>
+            <div
+              class="h-1.5 bg-gray-700 rounded-full overflow-hidden"
+              role="progressbar"
+              :aria-valuenow="waterDone"
+              :aria-valuemin="0"
+              :aria-valuemax="waterTotal"
+              :aria-label="`Water: ${waterDone} van ${waterTotal} gedaan`"
+            >
+              <div
+                class="h-full bg-water rounded-full transition-all duration-500"
+                :style="{ width: waterPercent + '%' }"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Volgende melding -->
       <section
         v-if="nextPending"
@@ -233,6 +292,15 @@ const nextPending = computed(() => {
   if (!todayData.value) return null
   return getNextPending(todayData.value.schedule)
 })
+
+const foodMoments  = computed(() => todayData.value?.schedule.filter(m => m.type === 'food') ?? [])
+const waterMoments = computed(() => todayData.value?.schedule.filter(m => m.type === 'water') ?? [])
+const foodDone     = computed(() => foodMoments.value.filter(m => m.status === 'done').length)
+const waterDone    = computed(() => waterMoments.value.filter(m => m.status === 'done').length)
+const foodTotal    = computed(() => foodMoments.value.length)
+const waterTotal   = computed(() => waterMoments.value.length)
+const foodPercent  = computed(() => foodTotal.value ? Math.round(foodDone.value / foodTotal.value * 100) : 0)
+const waterPercent = computed(() => waterTotal.value ? Math.round(waterDone.value / waterTotal.value * 100) : 0)
 
 function formatTime(timestamp) {
   return new Date(timestamp).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })
