@@ -48,6 +48,42 @@ jobs:
           # APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           # APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
 
+  # ── Android build (APK) ───────────────────────────────────────────
+  build-android:
+    name: Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - run: npm ci
+
+      - name: Web build voor Capacitor
+        run: npm run build:web
+
+      - name: Capacitor sync Android
+        run: npx cap sync android
+
+      - name: Android APK bouwen
+        run: cd android && chmod +x gradlew && ./gradlew assembleRelease
+        env:
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
+      - name: Upload APK naar GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: android/app/build/outputs/apk/release/*.apk
+          token: ${{ secrets.RELEASES_TOKEN }}
+          repository: rvdstarre/ritme-timer-releases
+
   # ── iOS build (IPA via Xcode) ─────────────────────────────────────
   build-ios:
     name: iOS
