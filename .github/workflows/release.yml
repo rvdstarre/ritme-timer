@@ -64,12 +64,8 @@ jobs:
       - name: Web build voor Capacitor
         run: npm run build:web
 
-      - name: Capacitor add + sync iOS
-        run: |
-          if [ ! -d "ios/App" ]; then
-            npx cap add ios
-          fi
-          npx cap sync ios
+      - name: Capacitor sync iOS
+        run: npx cap sync ios
 
       - name: Xcode build (unsigned IPA)
         run: |
