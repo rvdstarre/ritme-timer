@@ -18,16 +18,22 @@ Geen tag = van toepassing op alle platformen.
 
 ## [Unreleased]
 ### Toegevoegd
-- Versienummer zichtbaar in de header (rechts van de titel, bijv. "v0.3.0")
+### Gewijzigd
+### Opgelost
+### Verwijderd
+
+---
+
+## [0.4.0] - 2026-05-04
+
+### Toegevoegd
+- Versienummer zichtbaar in de header (rechts van de titel, bijv. "v0.4.0")
 - "Nu"-knop naast het tijdveld op het vandaag-tabblad: start het schema direct vanaf het huidige tijdstip zonder handmatig de tijd in te voeren
 
-### Gewijzigd
 ### Opgelost
 - **Android:** Notificaties werkten niet op Android 13+ (Pixel 9) — app vraagt nu correct toestemming via `requestPermissions()`
 - **Android:** Notificaties werkten niet op Android 8+ — notificatiekanaal `ritme` wordt nu aangemaakt bij opstarten
 - **Android:** Notificatie-icoon (`ic_stat_icon_config_sample`) bestond niet — vervangen door `ic_launcher_foreground`
-
-### Verwijderd
 
 ---
 
