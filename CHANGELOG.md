@@ -19,6 +19,7 @@ Geen tag = van toepassing op alle platformen.
 ## [Unreleased]
 ### Toegevoegd
 - Versienummer zichtbaar in de header (rechts van de titel, bijv. "v0.3.0")
+- "Nu"-knop naast het tijdveld op het vandaag-tabblad: start het schema direct vanaf het huidige tijdstip zonder handmatig de tijd in te voeren
 
 ### Gewijzigd
 ### Opgelost

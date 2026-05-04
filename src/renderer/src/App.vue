@@ -46,14 +46,24 @@
       <label :for="'start-time-' + activeTab" class="text-sm text-gray-300">
         {{ activeTab === 'today' ? 'Wanneer wil je vandaag beginnen?' : 'Wanneer begin je morgen?' }}
       </label>
-      <input
-        :id="'start-time-' + activeTab"
-        ref="timeInputRef"
-        v-model="startTimeInput"
-        type="time"
-        :aria-label="activeTab === 'today' ? 'Begintijd vandaag' : 'Begintijd morgen'"
-        class="bg-gray-800 text-white rounded-xl px-4 py-3 text-center text-2xl font-mono border border-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-500"
-      />
+      <div class="flex gap-2">
+        <input
+          :id="'start-time-' + activeTab"
+          ref="timeInputRef"
+          v-model="startTimeInput"
+          type="time"
+          :aria-label="activeTab === 'today' ? 'Begintijd vandaag' : 'Begintijd morgen'"
+          class="flex-1 bg-gray-800 text-white rounded-xl px-4 py-3 text-center text-2xl font-mono border border-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-500"
+        />
+        <button
+          v-if="activeTab === 'today'"
+          @click="startNow"
+          aria-label="Schema starten vanaf het huidige tijdstip"
+          class="shrink-0 bg-gray-700 hover:bg-gray-600 text-white font-semibold px-4 rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+        >
+          Nu
+        </button>
+      </div>
       <button
         @click="applyStartTime"
         :disabled="!startTimeInput"
@@ -428,6 +438,12 @@ function momentAriaLabel(moment) {
 
 function announce(message) {
   if (liveRegion.value) liveRegion.value.textContent = message
+}
+
+function startNow() {
+  const d = new Date()
+  startTimeInput.value = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+  applyStartTime()
 }
 
 async function applyStartTime() {
