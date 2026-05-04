@@ -69,8 +69,10 @@ jobs:
       - name: Web build voor Capacitor
         run: npm run build:web
 
-      - name: Capacitor sync Android
-        run: npx cap sync android
+      - name: Capacitor add + sync Android
+        run: npx cap add android && npx cap sync android
+        env:
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
       - name: Android APK bouwen
         run: cd android && chmod +x gradlew && ./gradlew assembleRelease
@@ -100,8 +102,8 @@ jobs:
       - name: Web build voor Capacitor
         run: npm run build:web
 
-      - name: Capacitor sync iOS
-        run: npx cap sync ios
+      - name: Capacitor add + sync iOS
+        run: npx cap add ios && npx cap sync ios
 
       - name: Xcode build (unsigned IPA)
         run: |
@@ -119,7 +121,7 @@ jobs:
           xcodebuild \
             -exportArchive \
             -archivePath build/App.xcarchive \
-            -exportOptionsPlist ios/ExportOptions.plist \
+            -exportOptionsPlist build/ExportOptions.plist \
             -exportPath build/ios-output
 
       - name: Upload IPA naar GitHub Release
