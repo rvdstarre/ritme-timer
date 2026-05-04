@@ -20,6 +20,7 @@ Geen tag = van toepassing op alle platformen.
 ### Toegevoegd
 - Voortgangsbalk voor eten en water: toont hoeveel maaltijden/watermomenten al zijn bevestigd (X/Y + gekleurde balk), met `role="progressbar"` en `aria-label` voor schermlezers
 - Tijdlijn gegroepeerd per maaltijdcluster (water-voor + maaltijd + water-na in één visuele kaart), met verbindingslijn binnen de cluster en witruimte tussen clusters
+- Afgeronde clusters klappen automatisch in tot een compacte samenvatting (maaltijdnaam + tijdbereik + gemiste items); uitklapbaar via klik, met `aria-expanded` voor schermlezers
 
 ### Gewijzigd
 ### Opgelost

@@ -195,78 +195,106 @@
             :key="gi"
             class="bg-gray-800/50 rounded-xl px-3 py-2"
           >
-            <ul class="flex flex-col">
-              <li
-                v-for="(moment, index) in group"
-                :key="moment.id"
-                class="flex gap-3"
-                :aria-label="momentAriaLabel(moment)"
-              >
-                <!-- Links: dot + verbindingslijn -->
-                <div class="flex flex-col items-center w-8 shrink-0">
-                  <span
-                    aria-hidden="true"
-                    :class="[
-                      'text-sm w-8 h-8 flex items-center justify-center rounded-full shrink-0 transition',
-                      moment.type === 'water' ? 'bg-water/15' : 'bg-food/15',
-                      moment.status === 'done' || moment.status === 'missed' ? 'opacity-30' : '',
-                      moment.id === nextPending?.id
-                        ? (moment.type === 'water'
-                            ? 'ring-2 ring-water ring-offset-2 ring-offset-gray-800'
-                            : 'ring-2 ring-food ring-offset-2 ring-offset-gray-800')
-                        : ''
-                    ]"
-                  >
-                    {{ moment.type === 'water' ? '💧' : '🍽️' }}
-                  </span>
-                  <!-- Verbindingslijn — alleen binnen de groep -->
-                  <div
-                    v-if="index < group.length - 1"
-                    :class="[
-                      'w-0.5 flex-1 mt-1 min-h-4 rounded-full',
-                      moment.status === 'done' ? 'bg-gray-600' : 'bg-gray-700'
-                    ]"
-                  ></div>
-                </div>
+            <!-- Ingeklapt: alle momenten in de cluster zijn afgerond -->
+            <button
+              v-if="isGroupDone(group) && !isExpanded(gi)"
+              @click="expandGroup(gi)"
+              :aria-label="`${groupSummary(group)} — uitklappen`"
+              aria-expanded="false"
+              class="w-full flex items-center gap-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg"
+            >
+              <span aria-hidden="true" class="text-sm w-8 h-8 flex items-center justify-center rounded-full bg-green-900/40 shrink-0 text-green-500">✓</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-400 truncate">{{ groupMealLabel(group) }}</p>
+                <p class="text-xs text-gray-600">{{ groupTimeRange(group) }}</p>
+              </div>
+              <span aria-hidden="true" class="text-gray-600 text-xs shrink-0">›</span>
+            </button>
 
-                <!-- Rechts: content -->
-                <div
-                  :class="[
-                    'flex-1 flex items-center gap-2 min-w-0 transition',
-                    index < group.length - 1 ? 'pb-3' : 'pb-0',
-                    moment.status === 'done' || moment.status === 'missed' ? 'opacity-40' : ''
-                  ]"
+            <!-- Uitgeklapt: normale weergave -->
+            <div v-else>
+              <div v-if="isGroupDone(group) && isExpanded(gi)" class="flex justify-end mb-1">
+                <button
+                  @click="collapseGroup(gi)"
+                  aria-label="Cluster inklappen"
+                  aria-expanded="true"
+                  class="text-xs text-gray-600 hover:text-gray-400 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
                 >
-                  <div class="flex-1 min-w-0">
-                    <p
+                  Inklappen
+                </button>
+              </div>
+              <ul class="flex flex-col">
+                <li
+                  v-for="(moment, index) in group"
+                  :key="moment.id"
+                  class="flex gap-3"
+                  :aria-label="momentAriaLabel(moment)"
+                >
+                  <!-- Links: dot + verbindingslijn -->
+                  <div class="flex flex-col items-center w-8 shrink-0">
+                    <span
+                      aria-hidden="true"
                       :class="[
-                        'text-sm font-medium truncate',
-                        moment.status === 'missed' ? 'line-through' : ''
+                        'text-sm w-8 h-8 flex items-center justify-center rounded-full shrink-0 transition',
+                        moment.type === 'water' ? 'bg-water/15' : 'bg-food/15',
+                        moment.status === 'done' || moment.status === 'missed' ? 'opacity-30' : '',
+                        moment.id === nextPending?.id
+                          ? (moment.type === 'water'
+                              ? 'ring-2 ring-water ring-offset-2 ring-offset-gray-800'
+                              : 'ring-2 ring-food ring-offset-2 ring-offset-gray-800')
+                          : ''
                       ]"
-                    >{{ moment.label }}</p>
-                    <p class="text-xs text-gray-400">{{ formatTime(moment.scheduledAt) }}</p>
+                    >
+                      {{ moment.type === 'water' ? '💧' : '🍽️' }}
+                    </span>
+                    <div
+                      v-if="index < group.length - 1"
+                      :class="[
+                        'w-0.5 flex-1 mt-1 min-h-4 rounded-full',
+                        moment.status === 'done' ? 'bg-gray-600' : 'bg-gray-700'
+                      ]"
+                    ></div>
                   </div>
-                  <span
-                    v-if="moment.status === 'done'"
-                    aria-label="Bevestigd"
-                    aria-hidden="true"
-                    class="text-green-500 text-xs shrink-0"
-                  >✓</span>
-                  <span
-                    v-if="moment.status === 'missed'"
-                    class="text-red-400 text-xs shrink-0"
-                  >Gemist</span>
-                  <button
-                    v-if="moment.status === 'pending' && moment.id !== nextPending?.id"
-                    @click="confirm(moment)"
-                    :aria-label="`Bevestig: ${moment.label} om ${formatTime(moment.scheduledAt)}`"
-                    class="text-xs text-gray-400 hover:text-green-400 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded px-1 shrink-0"
+
+                  <!-- Rechts: content -->
+                  <div
+                    :class="[
+                      'flex-1 flex items-center gap-2 min-w-0 transition',
+                      index < group.length - 1 ? 'pb-3' : 'pb-0',
+                      moment.status === 'done' || moment.status === 'missed' ? 'opacity-40' : ''
+                    ]"
                   >
-                    Bevestig
-                  </button>
-                </div>
-              </li>
-            </ul>
+                    <div class="flex-1 min-w-0">
+                      <p
+                        :class="[
+                          'text-sm font-medium truncate',
+                          moment.status === 'missed' ? 'line-through' : ''
+                        ]"
+                      >{{ moment.label }}</p>
+                      <p class="text-xs text-gray-400">{{ formatTime(moment.scheduledAt) }}</p>
+                    </div>
+                    <span
+                      v-if="moment.status === 'done'"
+                      aria-label="Bevestigd"
+                      aria-hidden="true"
+                      class="text-green-500 text-xs shrink-0"
+                    >✓</span>
+                    <span
+                      v-if="moment.status === 'missed'"
+                      class="text-red-400 text-xs shrink-0"
+                    >Gemist</span>
+                    <button
+                      v-if="moment.status === 'pending' && moment.id !== nextPending?.id"
+                      @click="confirm(moment)"
+                      :aria-label="`Bevestig: ${moment.label} om ${formatTime(moment.scheduledAt)}`"
+                      class="text-xs text-gray-400 hover:text-green-400 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 rounded px-1 shrink-0"
+                    >
+                      Bevestig
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -309,6 +337,39 @@ const foodTotal    = computed(() => foodMoments.value.length)
 const waterTotal   = computed(() => waterMoments.value.length)
 const foodPercent  = computed(() => foodTotal.value ? Math.round(foodDone.value / foodTotal.value * 100) : 0)
 const waterPercent = computed(() => waterTotal.value ? Math.round(waterDone.value / waterTotal.value * 100) : 0)
+
+const expandedGroupsSet = new Set()
+const expandedGroupsTick = ref(0)
+
+function isExpanded(gi) {
+  // eslint-disable-next-line no-unused-expressions
+  expandedGroupsTick.value  // reactive dependency
+  return expandedGroupsSet.has(gi)
+}
+
+function expandGroup(gi)   { expandedGroupsSet.add(gi);    expandedGroupsTick.value++ }
+function collapseGroup(gi) { expandedGroupsSet.delete(gi); expandedGroupsTick.value++ }
+
+function isGroupDone(group) {
+  return group.every(m => m.status === 'done' || m.status === 'missed')
+}
+
+function groupMealLabel(group) {
+  return group.find(m => m.type === 'food')?.label ?? group[0].label
+}
+
+function groupTimeRange(group) {
+  const first = formatTime(group[0].scheduledAt)
+  const last  = formatTime(group[group.length - 1].scheduledAt)
+  return first === last ? first : `${first} – ${last}`
+}
+
+function groupSummary(group) {
+  const meal   = groupMealLabel(group)
+  const range  = groupTimeRange(group)
+  const missed = group.filter(m => m.status === 'missed').length
+  return missed > 0 ? `${meal} (${missed} gemist), ${range}` : `${meal}, ${range}`
+}
 
 const groupedSchedule = computed(() => {
   if (!currentDay.value) return []
