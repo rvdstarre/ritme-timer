@@ -18,10 +18,12 @@
   },
   "dependencies": {
     "@capacitor/android": "^7.0.0",
-    "@capacitor/ios": "^7.0.0",
     "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0",
     "@capacitor/local-notifications": "^7.0.0",
     "@capacitor/preferences": "^7.0.0",
+    "@sentry/capacitor": "^4.0.0",
+    "@sentry/vue": "^7.120.4",
     "electron-store": "^10.0.1",
     "electron-updater": "^6.3.9",
     "vue": "^3.5.0",
@@ -55,7 +57,13 @@
     },
     "mac": {
       "target": [
-        { "target": "dmg", "arch": ["x64", "arm64"] }
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
       ],
       "icon": "build/icon.png",
       "category": "public.app-category.healthcare-fitness",
@@ -66,7 +74,11 @@
       "sign": false
     },
     "linux": {
-      "target": ["AppImage", "deb", "rpm"],
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
       "icon": "build/icon.png",
       "category": "Utility"
     },
