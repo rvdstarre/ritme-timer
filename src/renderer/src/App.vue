@@ -306,7 +306,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { getDateKeys, setStartTime, confirmMoment, syncDay, onNotificationClicked } from './services/api.js'
+import { getDateKeys, setStartTime, confirmMoment, syncDay, onNotificationClicked, initNotifications } from './services/api.js'
 import { getNextPending } from './utils/schema-engine-web.js'
 import UpdateBanner from './components/UpdateBanner.vue'
 import { version as appVersion } from '../../../package.json'
@@ -473,6 +473,7 @@ watch(editingStart, async (val) => {
 onMounted(async () => {
   clockTimer = setInterval(() => { now.value = Date.now() }, 1000)
 
+  await initNotifications()
   dateKeys.value     = await getDateKeys()
   todayData.value    = await syncDay(dateKeys.value.today)
   tomorrowData.value = await syncDay(dateKeys.value.tomorrow)

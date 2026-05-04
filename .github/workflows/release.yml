@@ -63,8 +63,8 @@ jobs:
       - name: Web build voor Capacitor
         run: npm run build:web
 
-      - name: Capacitor add + sync Android
-        run: npx cap add android && npx cap sync android
+      - name: Capacitor sync Android
+        run: npx cap sync android
         env:
           ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 

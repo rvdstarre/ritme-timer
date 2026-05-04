@@ -3,7 +3,9 @@ dist/
 dist-electron/
 dist-web/
 out/
-android/
+android/app/build/
+android/.gradle/
+android/local.properties
 ios/
 *.local
 .env

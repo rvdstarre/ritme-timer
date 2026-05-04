@@ -66,6 +66,24 @@ export async function syncDay(dateKey) {
 
 // --- Notificaties (Capacitor) ---
 
+export async function initNotifications() {
+  if (isElectron) return
+
+  // Android 13+: permissie vragen
+  const { display } = await LocalNotifications.requestPermissions()
+  if (display !== 'granted') return
+
+  // Android 8+: channel aanmaken (idempotent)
+  await LocalNotifications.createChannel({
+    id: 'ritme',
+    name: 'Ritme meldingen',
+    description: 'Herinneringen voor eten en drinken',
+    importance: 4,   // HIGH
+    vibration: true,
+    sound: 'default'
+  })
+}
+
 async function scheduleCapacitorNotifications(schedule) {
   await LocalNotifications.cancel({ notifications: schedule.map(m => ({ id: m.id })) })
 
