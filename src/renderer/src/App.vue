@@ -9,6 +9,7 @@
     <!-- Header -->
     <header class="flex items-center justify-between">
       <h1 class="text-xl font-bold tracking-tight">Ritme Timer</h1>
+      <span class="text-xs text-gray-600">v{{ appVersion }}</span>
     </header>
 
     <!-- Update beschikbaar -->
@@ -308,6 +309,7 @@ import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { getDateKeys, setStartTime, confirmMoment, syncDay, onNotificationClicked } from './services/api.js'
 import { getNextPending } from './utils/schema-engine-web.js'
 import UpdateBanner from './components/UpdateBanner.vue'
+import { version as appVersion } from '../../../package.json'
 
 const dateKeys     = ref({ today: '', tomorrow: '' })
 const activeTab    = ref('today')

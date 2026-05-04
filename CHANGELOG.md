@@ -18,6 +18,8 @@ Geen tag = van toepassing op alle platformen.
 
 ## [Unreleased]
 ### Toegevoegd
+- Versienummer zichtbaar in de header (rechts van de titel, bijv. "v0.3.0")
+
 ### Gewijzigd
 ### Opgelost
 ### Verwijderd
