@@ -41,12 +41,6 @@ jobs:
         run: npm run package -- --mac
         env:
           GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
-          # Signing: stel in als je een Apple Developer account hebt
-          # CSC_LINK: ${{ secrets.APPLE_CERT_P12_BASE64 }}
-          # CSC_KEY_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
-          # APPLE_ID: ${{ secrets.APPLE_ID }}
-          # APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          # APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
 
   # ── Android build (APK) ───────────────────────────────────────────
   build-android:
@@ -62,7 +56,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - run: npm ci
 
@@ -105,7 +99,7 @@ jobs:
       - name: Capacitor add + sync iOS
         run: npx cap add ios && npx cap sync ios
 
-      - name: Xcode build (unsigned IPA)
+      - name: Xcode archiveren
         run: |
           xcodebuild \
             -workspace ios/App/App.xcworkspace \
@@ -118,15 +112,15 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
 
-          xcodebuild \
-            -exportArchive \
-            -archivePath build/App.xcarchive \
-            -exportOptionsPlist build/ExportOptions.plist \
-            -exportPath build/ios-output
+      - name: IPA inpakken vanuit archief
+        run: |
+          mkdir -p build/Payload
+          cp -r build/App.xcarchive/Products/Applications/App.app build/Payload/
+          cd build && zip -r ritme-timer.ipa Payload/
 
       - name: Upload IPA naar GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/ios-output/*.ipa
+          files: build/ritme-timer.ipa
           token: ${{ secrets.RELEASES_TOKEN }}
           repository: rvdstarre/ritme-timer-releases

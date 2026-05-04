@@ -62,7 +62,7 @@
       "darkModeSupport": true
     },
     "dmg": {
-      "title": "Ritme Timer ${version}",
+      "title": "RitmeTimer-${version}",
       "sign": false
     },
     "linux": {
